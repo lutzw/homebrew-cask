@@ -5,12 +5,16 @@ class Cask::PkgInstaller
   end
 
   def install
-    @cask.installable_pkgs.each do |pkg|
+    @cask.installers.each do |installer|
       ohai "Running installer for #{@cask}; your password may be necessary."
-      output = @command.run("sudo installer -pkg '#{pkg}' -target /")
-      output.each do |line|
-        ohai line
-      end
+      @command.run("sudo installer -pkg '#{installer}' -target /")
+    end
+  end
+
+  def uninstall
+    @cask.uninstallers.each do |uninstaller|
+      ohai "Running uninstaller for #{@cask}; your password may be necessary."
+      @command.run("sudo '#{uninstaller}'")
     end
   end
 end
