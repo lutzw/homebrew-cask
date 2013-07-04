@@ -58,8 +58,8 @@ module Cask::DSL
       @uninstallables ||= Set.new
     end
 
-    def uninstall(*files)
-      uninstallables.merge files
+    def uninstall(file, options={})
+      uninstallables.merge [[file, options]]
     end
 
     attr_reader :sums

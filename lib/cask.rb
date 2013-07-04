@@ -104,7 +104,7 @@ class Cask
   end
 
   def uninstallers
-    uninstallables.map { |pkg| Pathname.glob("#{destination_path}/**/#{pkg}").first }
+    uninstallables.map { |file, options| [ Pathname.glob("#{destination_path}/**/#{file}").first, options ] }
   end
 
   def to_s

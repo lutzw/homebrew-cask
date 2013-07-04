@@ -18,11 +18,26 @@ describe Cask::PkgInstaller do
     it 'runs the system installer on the specified pkgs' do
       pkg_installer = Cask::PkgInstaller.new(@cask, Cask::FakeSystemCommand)
 
-      expected_command = "sudo installer -pkg '#{@cask.destination_path/'MyFancyPkg'/'Fancy.pkg'}' -target /"
+      expected_command = "sudo 'installer' '-pkg' '#{@cask.destination_path/'MyFancyPkg'/'Fancy.pkg'}' '-target' '/'"
       Cask::FakeSystemCommand.fake_response_for(expected_command)
 
       shutup do
         pkg_installer.install
+      end
+
+      Cask::FakeSystemCommand.system_calls[expected_command].must_equal 1
+    end
+  end
+
+  describe 'uninstall' do
+    it 'runs the specified uninstaller for the cask' do
+      pkg_installer = Cask::PkgInstaller.new(@cask, Cask::FakeSystemCommand)
+
+      expected_command = "sudo '#{@cask.destination_path/'MyFancyPkg'/'FancyUninstaller.tool'}' '--please'"
+      Cask::FakeSystemCommand.fake_response_for(expected_command)
+
+      shutup do
+        pkg_installer.uninstall
       end
 
       Cask::FakeSystemCommand.system_calls[expected_command].must_equal 1
